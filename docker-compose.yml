@@ -3,7 +3,7 @@ name: blog-api
 services:
   redis:
     container_name: blog_redis
-    image: redis:alpine3.21
+    image: redis:7-alpine
     restart: always
     ports:
       - "${REDIS_PORT}:6379"
@@ -17,7 +17,7 @@ services:
 
   psql:
     container_name: blog_db
-    image: postgres:16
+    image: postgres:16-alpine
     restart: always
     ports:
       - "${DATABASE_PORT}:5432"
