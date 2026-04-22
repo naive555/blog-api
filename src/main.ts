@@ -1,6 +1,6 @@
 import compression from '@fastify/compress';
 import cors from '@fastify/cors';
-import fastifyStatic from '@fastify/static';
+import helmet from '@fastify/helmet';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
@@ -10,7 +10,6 @@ import {
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { useContainer } from 'class-validator';
-import { dirname } from 'path';
 
 import { AppModule } from './app.module';
 
@@ -29,15 +28,6 @@ async function bootstrap() {
   const environment = configService.get<string>('common.environment');
   const port = configService.get<number>('common.port') ?? 3001;
 
-  if (isCorsEnabled) {
-    await app.register(cors, {
-      origin: configService.get<string | string[]>('common.corsDomains'),
-      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    });
-  }
-
-  await app.register(compression);
-
   app.setGlobalPrefix('api');
   app.useGlobalPipes(
     new ValidationPipe({
@@ -47,28 +37,30 @@ async function bootstrap() {
     }),
   );
 
-  useContainer(app.select(AppModule), { fallbackOnErrors: true });
-
-  const swaggerUiDistPath = dirname(
-    require.resolve('swagger-ui-dist/package.json'),
-  );
-  await app.register(fastifyStatic, {
-    root: swaggerUiDistPath,
-    prefix: '/swagger-static/',
-    decorateReply: false,
-  });
-
   const config = new DocumentBuilder()
     .setTitle(name)
     .setVersion(version)
     .addBearerAuth()
     .build();
-
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document, {
-    customCssUrl: '/swagger-static/swagger-ui.css',
-    customJs: '/swagger-static/swagger-ui-bundle.js',
+  SwaggerModule.setup('/api/docs', app, document, {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+    customSiteTitle: name,
   });
+
+  if (isCorsEnabled) {
+    await app.register(cors, {
+      origin: configService.get<string | string[]>('common.corsDomains'),
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    });
+  }
+
+  await app.register(helmet);
+  await app.register(compression);
+
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   await app.listen(port, '0.0.0.0');
   logger.log(`${name} - ${version}`);
