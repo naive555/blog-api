@@ -3,167 +3,194 @@
 </p>
 
 <p align="center">
-  Backend service built with <strong>NestJS</strong>, <strong>Fastify</strong>, and <strong>Bun</strong>, focused on high‑performance data fetching and background processing.
+  Blog system backend built with <strong>NestJS</strong>, <strong>Fastify</strong>, and <strong>PostgreSQL</strong>
 </p>
 
 ---
 
 ## Overview
 
-This project is a NestJS backend application migrated to:
+A RESTful blog backend with:
 
-- **Bun** for dependency management and runtime
-- **Fastify** as the HTTP adapter for better performance
-- **BullMQ** for background jobs and queue processing
-
-Primary use case:
-
-- Fetch Pokémon data from external APIs
-- Process and persist data asynchronously into a database
-- Support containerized and Kubernetes‑ready deployment
-
-(Yes, it’s fast. Bun makes `npm install` feel like cheating.)
+- Public blog listing (search + pagination) and detail pages with view count tracking
+- Comment submission with admin approval flow
+- Blog image management (1 cover + up to 6 additional images per post)
+- Admin authentication with JWT session caching via Redis
 
 ---
 
 ## Tech Stack
 
-- **Runtime**: Bun
-- **Framework**: NestJS
-- **HTTP Adapter**: Fastify
-- **Queue**: BullMQ + Redis
-- **Database**: TypeORM (configurable)
-- **Cache**: Cache Manager
-- **Containerization**: Docker (K8s‑ready)
+| Layer | Technology |
+|---|---|
+| Framework | NestJS 11 |
+| HTTP Adapter | Fastify |
+| Runtime | Bun |
+| Database | PostgreSQL 16 + TypeORM |
+| Cache / Sessions | Redis + cache-manager |
+| Auth | Passport.js (JWT + Local) |
+| Validation | class-validator + class-transformer |
+| Docs | Swagger UI (`/api/docs`) |
 
 ---
 
-## Requirements
+## Project Structure
 
-- Bun `>= 1.x`
-- Node.js `>= 18` (for tooling compatibility)
-- Redis (for BullMQ)
-- Docker (optional, recommended)
+```
+src/
+├── auth/           JWT + local auth, login/register/logout
+├── user/           Admin user CRUD
+├── blog/           Blog posts — public read, admin write
+├── blog-image/     Cover + additional images per blog
+├── comment/        Public submission, admin approval
+├── config/         Centralized environment configuration
+├── middleware/      Global logging interceptor
+└── utility/        Shared enums, constants, helpers
+```
 
 ---
 
-## Project Setup
+## API Endpoints
 
-Install dependencies using Bun:
+### Auth
+| Method | Route | Auth | Description |
+|--------|-------|------|-------------|
+| `POST` | `/api/auth/login` | — | Admin login, returns JWT |
+| `POST` | `/api/auth/register` | — | Register admin account |
+| `POST` | `/api/auth/logout` | JWT | Invalidate session |
+
+### Blog
+| Method | Route | Auth | Description |
+|--------|-------|------|-------------|
+| `GET` | `/api/blog` | — | List blogs (`?search=&page=&limit=`) |
+| `GET` | `/api/blog/:slug` | — | Blog detail, increments view count |
+| `POST` | `/api/blog` | JWT | Create blog post |
+| `PUT` | `/api/blog/:id` | JWT | Update blog post |
+| `DELETE` | `/api/blog/:id` | JWT | Soft-delete blog post |
+
+### Blog Images
+| Method | Route | Auth | Description |
+|--------|-------|------|-------------|
+| `GET` | `/api/blog/:blogId/image` | JWT | List images (cover first) |
+| `POST` | `/api/blog/:blogId/image` | JWT | Add image (max 1 cover + 6 additional) |
+| `PATCH` | `/api/blog-image/:id` | JWT | Update URL or promote to cover |
+| `DELETE` | `/api/blog-image/:id` | JWT | Remove image |
+
+### Comments
+| Method | Route | Auth | Description |
+|--------|-------|------|-------------|
+| `POST` | `/api/blog/:blogId/comment` | — | Submit comment (status: pending) |
+| `GET` | `/api/comment` | JWT | List comments with filters |
+| `PATCH` | `/api/comment/:id/approve` | JWT | Approve comment |
+| `PATCH` | `/api/comment/:id/reject` | JWT | Reject comment |
+
+### Users
+| Method | Route | Auth | Description |
+|--------|-------|------|-------------|
+| `GET` | `/api/user` | JWT | List users |
+| `GET` | `/api/user/:id` | JWT | Get user by ID |
+| `POST` | `/api/user` | JWT | Create user |
+| `PUT` | `/api/user/:id` | JWT | Update user |
+| `DELETE` | `/api/user/:id` | JWT | Soft-delete user |
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- [Bun](https://bun.sh) >= 1.x
+- PostgreSQL 16
+- Redis
+
+### Install
 
 ```bash
 bun install
 ```
 
-Environment files resolution order:
+### Environment
 
+Create a `.env` file (or `.env.local` / `.env.docker` depending on environment):
+
+```env
+# App
+PORT=3001
+NODE_ENV=local
+
+# Database
+DATABASE_TYPE=postgres
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USER=postgres
+DATABASE_PASSWORD=postgres
+DATABASE_DB=blog
+DATABASE_SYNCHRONIZE=true
+DATABASE_LOGGING=false
+
+# Redis
+REDIS_HOST=localhost
+REDIS_PORT=6379
+
+# JWT
+JWT_SECRET=your-secret-key
+JWT_EXPIRES_IN=3600
+
+# Bcrypt
+BCRYPT_SALT_ROUNDS=10
+
+# CORS
+CORS_ENABLED=true
 ```
-.env.docker  (if ENV=docker)
-.env.local
-.env
-```
 
----
-
-## Running the Application
-
-### Development
+### Run
 
 ```bash
+# Development (watch mode)
 bun run start:dev
-```
 
-### Production
-
-```bash
+# Production
 bun run build
 bun run start:prod
 ```
 
-Fastify will be used automatically as the HTTP adapter.
+Swagger UI is available at: **http://localhost:3001/api/docs**
 
 ---
 
-## Background Jobs (BullMQ)
+## Docker
 
-Pokémon detail fetching is handled asynchronously using BullMQ.
-
-### Queue Flow
-
-1. Producer enqueues Pokémon names
-2. Consumer fetches Pokémon details
-3. Data is saved into the database
-4. Concurrency is controlled to avoid overload
-
-Redis must be running:
+Start all services (app + PostgreSQL + Redis):
 
 ```bash
-docker run -p 6379:6379 redis:7
+docker-compose up -d
 ```
 
----
-
-## Docker Support
-
-Build image:
+Stop and remove containers:
 
 ```bash
-docker build -t blog-service .
+docker-compose down
 ```
 
-Run container:
-
-```bash
-docker run -p 3000:3000 blog-service
-```
-
-Works seamlessly with Docker Desktop and is Kubernetes‑ready.
-
----
-
-## Kubernetes (Optional)
-
-The application is designed to run in Kubernetes:
-
-- Stateless API pods
-- Redis as external or in‑cluster service
-- Horizontal scaling supported
-
-Sample manifests can be added later under `/k8s`.
+> The app service waits for PostgreSQL and Redis health checks before starting.
 
 ---
 
 ## Testing
 
 ```bash
+# Unit tests
 bun run test
-bun run test:e2e
+
+# Watch mode
+bun run test:watch
+
+# Coverage report
 bun run test:cov
 ```
 
 ---
 
-## Scripts
-
-```bash
-bun run start:dev   # development
-bun run start:prod  # production
-bun run lint
-bun run test
-```
-
----
-
-## Notes
-
-- Bun + Fastify significantly reduces startup time
-- BullMQ prevents API overload during mass fetch jobs
-- Concurrency limits are enforced at both queue and worker level
-
-In short: fast startup, controlled load, fewer regrets.
-
----
-
 ## License
 
-MIT License
+UNLICENSED
