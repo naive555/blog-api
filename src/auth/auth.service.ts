@@ -51,7 +51,10 @@ export class AuthService {
       return omit(user, ['password']) as User;
     } catch (error) {
       this.logger.error({
-        message: { function: this.validateUser.name, error: error.message },
+        message: {
+          function: this.validateUser.name,
+          error: (error as Error).message,
+        },
       });
       throw new InternalServerErrorException();
     }
@@ -76,7 +79,7 @@ export class AuthService {
       return { accessToken } as IAuthResponse;
     } catch (error) {
       this.logger.error({
-        message: { function: this.login.name, error: error.message },
+        message: { function: this.login.name, error: (error as Error).message },
       });
       throw new InternalServerErrorException();
     }
@@ -103,7 +106,10 @@ export class AuthService {
       return await this.cacheManager.get(`${USER_SESSION_KEY}:${userId}`);
     } catch (error) {
       this.logger.error({
-        message: { function: this.getTokenCache.name, error: error.message },
+        message: {
+          function: this.getTokenCache.name,
+          error: (error as Error).message,
+        },
       });
       throw new InternalServerErrorException();
     }
@@ -122,7 +128,10 @@ export class AuthService {
       );
     } catch (error) {
       this.logger.error({
-        message: { function: this.setTokenCache.name, error: error.message },
+        message: {
+          function: this.setTokenCache.name,
+          error: (error as Error).message,
+        },
       });
       throw new InternalServerErrorException();
     }
@@ -140,7 +149,10 @@ export class AuthService {
       await this.cacheManager.del(`${USER_SESSION_KEY}:${authPayload.sub}`);
     } catch (error) {
       this.logger.error({
-        message: { function: this.clearTokenCache.name, error: error.message },
+        message: {
+          function: this.clearTokenCache.name,
+          error: (error as Error).message,
+        },
       });
       throw new InternalServerErrorException();
     }

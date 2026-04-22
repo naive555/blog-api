@@ -1,17 +1,15 @@
+import { CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
-import { BullModule } from '@nestjs/bull';
 
-// config
+import { getEnvFilePath } from '../utility/common.function';
 import bcryptConfig from './bcrypt.config';
 import commonConfig from './common.config';
 import databaseConfig from './database.config';
 import jwtConfig from './jwt.config';
 import redisConfig from './redis.config';
-import { getEnvFilePath } from '../utility/common.function';
 
 @Module({
   imports: [
@@ -43,17 +41,6 @@ import { getEnvFilePath } from '../utility/common.function';
           password: configService.get('redis.password'),
           database: configService.get('redis.db'),
         }),
-      }),
-      inject: [ConfigService],
-    }),
-    BullModule.forRootAsync({
-      useFactory: (configService: ConfigService) => ({
-        redis: {
-          host: configService.get('redis.host'),
-          port: configService.get('redis.port'),
-          password: configService.get('redis.password'),
-          db: configService.get('redis.db'),
-        },
       }),
       inject: [ConfigService],
     }),

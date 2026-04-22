@@ -45,7 +45,7 @@ export class UserService {
       });
     } catch (error) {
       this.logger.error({
-        message: { function: this.find.name, error: error.message },
+        message: { function: this.find.name, error: (error as Error).message },
       });
       throw new InternalServerErrorException();
     }
@@ -63,7 +63,10 @@ export class UserService {
       });
     } catch (error) {
       this.logger.error({
-        message: { function: this.findByUsername.name, error: error.message },
+        message: {
+          function: this.findByUsername.name,
+          error: (error as Error).message,
+        },
       });
       throw new InternalServerErrorException();
     }
@@ -81,7 +84,10 @@ export class UserService {
       });
     } catch (error) {
       this.logger.error({
-        message: { function: this.findById.name, error: error.message },
+        message: {
+          function: this.findById.name,
+          error: (error as Error).message,
+        },
       });
       throw new InternalServerErrorException();
     }
@@ -107,7 +113,10 @@ export class UserService {
       return omit(user, ['password']) as User;
     } catch (error) {
       this.logger.error({
-        message: { function: this.create.name, error: error.message },
+        message: {
+          function: this.create.name,
+          error: (error as Error).message,
+        },
       });
       throw new InternalServerErrorException();
     }
@@ -130,7 +139,10 @@ export class UserService {
       await this.userRepository.update(id, updateData);
     } catch (error) {
       this.logger.error({
-        message: { function: this.update.name, error: error.message },
+        message: {
+          function: this.update.name,
+          error: (error as Error).message,
+        },
       });
       throw new InternalServerErrorException();
     }
@@ -148,7 +160,10 @@ export class UserService {
       );
     } catch (error) {
       this.logger.error({
-        message: { function: this.delete.name, error: error.message },
+        message: {
+          function: this.delete.name,
+          error: (error as Error).message,
+        },
       });
       throw new InternalServerErrorException();
     }
