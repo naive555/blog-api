@@ -1,0 +1,53 @@
+# ───────────────────────────────
+# 🔧 Node & Bun dependencies
+# ───────────────────────────────
+node_modules
+npm-debug.log
+yarn-error.log
+
+# ───────────────────────────────
+# 🧱 Build artifacts
+# ───────────────────────────────
+dist
+build
+coverage
+
+# ───────────────────────────────
+# ⚙️ Docker / Compose files
+# ───────────────────────────────
+Dockerfile
+docker-compose.yml
+docker-compose*.yml
+
+# ───────────────────────────────
+# 💬 Logs & temp files
+# ───────────────────────────────
+*.log
+*.tmp
+*.swp
+*.pid
+
+# ───────────────────────────────
+# 🧩 Git & IDE files
+# ───────────────────────────────
+.git
+.gitignore
+.gitattributes
+.vscode
+.idea
+*.iml
+
+# ───────────────────────────────
+# 🧪 Tests
+# ───────────────────────────────
+__tests__
+test
+tests
+*.spec.js
+*.test.js
+
+# ───────────────────────────────
+# 🪶 Miscellaneous
+# ───────────────────────────────
+README.md
+*.md
