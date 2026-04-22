@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+import { BlogImage } from '../blog-image/blog-image.entity';
 import { Comment } from '../comment/comment.entity';
 import { User } from '../user/user.entity';
 import { EStatus } from '../utility/common.enum';
@@ -50,6 +51,10 @@ export class Blog {
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'author_id' })
   author: User;
+
+  @ApiHideProperty()
+  @OneToMany(() => BlogImage, (image) => image.blog)
+  images: BlogImage[];
 
   @ApiHideProperty()
   @OneToMany(() => Comment, (comment) => comment.blog)
