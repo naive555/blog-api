@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -17,6 +18,7 @@ import { EStatus } from '../utility/common.enum';
 
 export const TABLE_BLOG = 'blog';
 
+@Index('UQ_blog_slug_active', ['slug'], { unique: true, where: 'status != -1' })
 @Entity({ name: TABLE_BLOG })
 export class Blog {
   @ApiProperty({ example: 'uuid-1234' })
@@ -28,7 +30,7 @@ export class Blog {
   title: string;
 
   @ApiProperty({ example: 'my-first-blog-post' })
-  @Column({ unique: true })
+  @Column()
   slug: string;
 
   @ApiProperty({ example: 'This is the full content of the blog post.' })
