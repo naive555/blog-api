@@ -1,5 +1,4 @@
 import compression from '@fastify/compress';
-import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -51,7 +50,7 @@ async function bootstrap() {
   });
 
   if (isCorsEnabled) {
-    await app.register(cors, {
+    app.enableCors({
       origin: configService.get<string | string[]>('common.corsDomains'),
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     });

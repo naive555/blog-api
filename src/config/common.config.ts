@@ -6,5 +6,7 @@ export default registerAs('common', () => ({
   environment: process.env.NODE_ENV || 'development',
   port: +process.env.PORT || 3000,
   cors: process.env.CORS === 'true',
-  corsDomains: process.env.CORS_DOMAINS || [],
+  corsDomains: process.env.CORS_DOMAINS
+    ? process.env.CORS_DOMAINS.split(',')
+    : [],
 }));
