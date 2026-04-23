@@ -298,8 +298,6 @@ Soft-delete a blog post (sets `status = -1`).
 
 ## Blog Image Endpoints
 
-All blog image endpoints require a valid Bearer token.
-
 ### GET `/blog/:blogId/image`
 
 List all images for a blog post. Results are ordered: cover image first, then additional images by creation date ascending.
@@ -326,6 +324,8 @@ List all images for a blog post. Results are ordered: cover image first, then ad
 ```
 
 ---
+
+The following blog image endpoints require a valid Bearer token.
 
 ### POST `/blog/:blogId/image`
 
@@ -500,7 +500,7 @@ All error responses follow the NestJS default shape:
 | `POST /blog`                 |        | ✓           |
 | `PUT /blog/:id`              |        | ✓           |
 | `DELETE /blog/:id`           |        | ✓           |
-| `GET /blog/:blogId/image`    |        | ✓           |
+| `GET /blog/:blogId/image`    | ✓      |             |
 | `POST /blog/:blogId/image`   |        | ✓           |
 | `PATCH /blog-image/:id`      |        | ✓           |
 | `DELETE /blog-image/:id`     |        | ✓           |

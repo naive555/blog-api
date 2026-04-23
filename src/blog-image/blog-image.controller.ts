@@ -28,13 +28,13 @@ import { CreateBlogImageDto } from './dto/create-blog-image.dto';
 import { UpdateBlogImageDto } from './dto/update-blog-image.dto';
 
 @ApiTags('blog-image')
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller()
 export class BlogImageController {
   constructor(private readonly blogImageService: BlogImageService) {}
 
-  @ApiOperation({ summary: '[Admin] List all images for a blog' })
+  // --- Public endpoint ---
+
+  @ApiOperation({ summary: 'List all images for a blog' })
   @ApiOkResponse({ type: [BlogImage] })
   @ApiNotFoundResponse({ description: 'Blog not found' })
   @Get('blog/:blogId/image')
@@ -42,6 +42,10 @@ export class BlogImageController {
     return this.blogImageService.findByBlog(blogId);
   }
 
+  // --- Admin endpoints (JWT required) ---
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: '[Admin] Add an image to a blog (max 1 cover + 6 additional)',
   })
@@ -55,6 +59,8 @@ export class BlogImageController {
     return this.blogImageService.create(blogId, body);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: '[Admin] Update an image (replace URL or promote to cover)',
   })
@@ -69,6 +75,8 @@ export class BlogImageController {
     return this.blogImageService.update(id, body);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '[Admin] Delete an image' })
   @ApiNoContentResponse()
   @ApiNotFoundResponse({ description: 'Blog image not found' })
