@@ -21,16 +21,16 @@ A RESTful blog backend with:
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Framework | NestJS 11 |
-| HTTP Adapter | Fastify |
-| Runtime | Bun |
-| Database | PostgreSQL 16 + TypeORM |
-| Cache / Sessions | Redis + cache-manager |
-| Auth | Passport.js (JWT + Local) |
-| Validation | class-validator + class-transformer |
-| Docs | Swagger UI (`/api/docs`) |
+| Layer            | Technology                          |
+| ---------------- | ----------------------------------- |
+| Framework        | NestJS 11                           |
+| HTTP Adapter     | Fastify                             |
+| Runtime          | Bun                                 |
+| Database         | PostgreSQL 16 + TypeORM             |
+| Cache / Sessions | Redis + cache-manager               |
+| Auth             | Passport.js (JWT + Local)           |
+| Validation       | class-validator + class-transformer |
+| Docs             | Swagger UI (`/api/docs`)            |
 
 ---
 
@@ -40,7 +40,7 @@ A RESTful blog backend with:
 src/
 ├── auth/           JWT + local auth, login/register/logout
 ├── user/           Admin user CRUD
-├── blog/           Blog posts — public read, admin write
+├── blog/           Blog posts - public read, admin write
 ├── blog-image/     Cover + additional images per blog
 ├── comment/        Public submission, admin approval
 ├── config/         Centralized environment configuration
@@ -53,45 +53,50 @@ src/
 ## API Endpoints
 
 ### Auth
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| `POST` | `/api/auth/login` | — | Admin login, returns JWT |
-| `POST` | `/api/auth/register` | — | Register admin account |
-| `POST` | `/api/auth/logout` | JWT | Invalidate session |
+
+| Method | Route                | Auth | Description              |
+| ------ | -------------------- | ---- | ------------------------ |
+| `POST` | `/api/auth/login`    | -    | Admin login, returns JWT |
+| `POST` | `/api/auth/register` | -    | Register admin account   |
+| `POST` | `/api/auth/logout`   | JWT  | Invalidate session       |
 
 ### Blog
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| `GET` | `/api/blog` | — | List blogs (`?search=&page=&limit=`) |
-| `GET` | `/api/blog/:slug` | — | Blog detail, increments view count |
-| `POST` | `/api/blog` | JWT | Create blog post |
-| `PUT` | `/api/blog/:id` | JWT | Update blog post |
-| `DELETE` | `/api/blog/:id` | JWT | Soft-delete blog post |
+
+| Method   | Route             | Auth | Description                          |
+| -------- | ----------------- | ---- | ------------------------------------ |
+| `GET`    | `/api/blog`       | -    | List blogs (`?search=&page=&limit=`) |
+| `GET`    | `/api/blog/:slug` | -    | Blog detail, increments view count   |
+| `POST`   | `/api/blog`       | JWT  | Create blog post                     |
+| `PUT`    | `/api/blog/:id`   | JWT  | Update blog post                     |
+| `DELETE` | `/api/blog/:id`   | JWT  | Soft-delete blog post                |
 
 ### Blog Images
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| `GET` | `/api/blog/:blogId/image` | JWT | List images (cover first) |
-| `POST` | `/api/blog/:blogId/image` | JWT | Add image (max 1 cover + 6 additional) |
-| `PATCH` | `/api/blog-image/:id` | JWT | Update URL or promote to cover |
-| `DELETE` | `/api/blog-image/:id` | JWT | Remove image |
+
+| Method   | Route                     | Auth | Description                            |
+| -------- | ------------------------- | ---- | -------------------------------------- |
+| `GET`    | `/api/blog/:blogId/image` | JWT  | List images (cover first)              |
+| `POST`   | `/api/blog/:blogId/image` | JWT  | Add image (max 1 cover + 6 additional) |
+| `PATCH`  | `/api/blog-image/:id`     | JWT  | Update URL or promote to cover         |
+| `DELETE` | `/api/blog-image/:id`     | JWT  | Remove image                           |
 
 ### Comments
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| `POST` | `/api/blog/:blogId/comment` | — | Submit comment (status: pending) |
-| `GET` | `/api/comment` | JWT | List comments with filters |
-| `PATCH` | `/api/comment/:id/approve` | JWT | Approve comment |
-| `PATCH` | `/api/comment/:id/reject` | JWT | Reject comment |
+
+| Method  | Route                       | Auth | Description                      |
+| ------- | --------------------------- | ---- | -------------------------------- |
+| `POST`  | `/api/blog/:blogId/comment` | -    | Submit comment (status: pending) |
+| `GET`   | `/api/comment`              | JWT  | List comments with filters       |
+| `PATCH` | `/api/comment/:id/approve`  | JWT  | Approve comment                  |
+| `PATCH` | `/api/comment/:id/reject`   | JWT  | Reject comment                   |
 
 ### Users
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| `GET` | `/api/user` | JWT | List users |
-| `GET` | `/api/user/:id` | JWT | Get user by ID |
-| `POST` | `/api/user` | JWT | Create user |
-| `PUT` | `/api/user/:id` | JWT | Update user |
-| `DELETE` | `/api/user/:id` | JWT | Soft-delete user |
+
+| Method   | Route           | Auth | Description      |
+| -------- | --------------- | ---- | ---------------- |
+| `GET`    | `/api/user`     | JWT  | List users       |
+| `GET`    | `/api/user/:id` | JWT  | Get user by ID   |
+| `POST`   | `/api/user`     | JWT  | Create user      |
+| `PUT`    | `/api/user/:id` | JWT  | Update user      |
+| `DELETE` | `/api/user/:id` | JWT  | Soft-delete user |
 
 ---
 
