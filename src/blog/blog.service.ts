@@ -149,10 +149,9 @@ export class BlogService {
     await this.findById(id);
 
     const updateData: Partial<Blog> = { ...blogData };
-    if (blogData.title) {
-      const slug = this.generateSlug(blogData.title);
-      await this.validateUniqueSlug(slug, id);
-      updateData.slug = slug;
+    if (blogData.slug) {
+      await this.validateUniqueSlug(blogData.slug, id);
+      updateData.slug = blogData.slug;
     }
 
     try {
