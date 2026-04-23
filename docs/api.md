@@ -195,6 +195,7 @@ List published blog posts with pagination and optional title search.
       "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       "title": "Getting Started with NestJS",
       "slug": "getting-started-with-nestjs",
+      "content": "This field is not included in the list response",
       "viewCount": 42,
       "status": 1,
       "authorId": "a1b2c3d4-...",

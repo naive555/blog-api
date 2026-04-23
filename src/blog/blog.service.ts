@@ -43,6 +43,7 @@ export class BlogService {
           'id',
           'title',
           'slug',
+          'content',
           'viewCount',
           'authorId',
           'status',
