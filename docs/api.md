@@ -264,13 +264,14 @@ Create a new blog post. The `slug` is auto-generated from the title and `authorI
 
 ### PUT `/blog/:id` - Auth required
 
-Update a blog post. All fields are optional. If `title` changes, the slug is regenerated.
+Update a blog post. All fields are optional. `slug` can be set directly; if omitted and `title` changes, the slug is regenerated from the new title.
 
 **Request body**
 
 ```json
 {
   "title": "Updated Title",
+  "slug": "updated-title",
   "content": "Updated content, still at least 10 characters.",
   "status": 0
 }

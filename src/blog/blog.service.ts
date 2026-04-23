@@ -152,6 +152,10 @@ export class BlogService {
     if (blogData.slug) {
       await this.validateUniqueSlug(blogData.slug, id);
       updateData.slug = blogData.slug;
+    } else if (blogData.title) {
+      const generatedSlug = this.generateSlug(blogData.title);
+      await this.validateUniqueSlug(generatedSlug, id);
+      updateData.slug = generatedSlug;
     }
 
     try {
