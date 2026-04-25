@@ -195,7 +195,16 @@ List published blog posts with pagination and optional title search.
       "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       "title": "Getting Started with NestJS",
       "slug": "getting-started-with-nestjs",
-      "content": "This field is not included in the list response",
+      "content": "This is the full content of the blog post, at least 10 characters long.",
+      "images": [
+        {
+          "id": "img-uuid-1",
+          "blogId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "url": "https://example.com/images/cover.jpg",
+          "isCover": true,
+          "createdAt": "2025-01-01T00:00:00.000Z"
+        }
+      ],
       "viewCount": 42,
       "status": 1,
       "authorId": "a1b2c3d4-...",
@@ -206,8 +215,6 @@ List published blog posts with pagination and optional title search.
   "total": 1
 }
 ```
-
-**Note:** The `content` field is **not** included in the list response to keep payloads small. Retrieve it via the slug endpoint.
 
 ---
 
@@ -223,6 +230,15 @@ Get a single blog post by its URL slug. Increments `view_count` on each call. In
   "title": "Getting Started with NestJS",
   "slug": "getting-started-with-nestjs",
   "content": "Full content of the blog post...",
+  "images": [
+    {
+      "id": "img-uuid-1",
+      "blogId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "url": "https://example.com/images/cover.jpg",
+      "isCover": true,
+      "createdAt": "2025-01-01T00:00:00.000Z"
+    }
+  ],
   "viewCount": 43,
   "status": 1,
   "authorId": "a1b2c3d4-...",

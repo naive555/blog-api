@@ -36,20 +36,22 @@ export class BlogService {
           status: Not(EStatus.DELETED),
           ...(search && { title: ILike(`%${search}%`) }),
         },
+        relations: { images: true },
         order: { createdAt: 'DESC' },
         skip,
         take: limit,
-        select: [
-          'id',
-          'title',
-          'slug',
-          'content',
-          'viewCount',
-          'authorId',
-          'status',
-          'createdAt',
-          'updatedAt',
-        ],
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          content: true,
+          images: true,
+          viewCount: true,
+          authorId: true,
+          status: true,
+          createdAt: true,
+          updatedAt: true,
+        },
       });
 
       return { data, total };
@@ -72,7 +74,7 @@ export class BlogService {
     try {
       const blog = await this.blogRepository.findOne({
         where: { slug, status: Not(EStatus.DELETED) },
-        relations: { comments: true },
+        relations: { comments: true, images: true },
       });
 
       if (!blog) throw new NotFoundException('Blog not found');
